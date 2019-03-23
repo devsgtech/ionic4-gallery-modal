@@ -1,58 +1,52 @@
 {
-  "_from": "ionic-gallery-modal",
-  "_id": "ionic-gallery-modal@0.2.7",
+  "_from": "ionic4-gallery-modal@0.0.2",
+  "_id": "ionic4-gallery-modal@0.0.2",
   "_inBundle": false,
-  "_integrity": "sha1-luFkjQXyJbUrE3sJ9H9k1LX2F9Y=",
-  "_location": "/ionic-gallery-modal",
+  "_integrity": "sha512-J9GV8CNo75YyKzs2Vph9UzZd3Oh2YrkTmo50QH6wrdEKpvYkU0Ilgft0bp+Kc/eEodhQNY/gn52wJlkoOG91rA==",
+  "_location": "/ionic4-gallery-modal",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "version",
     "registry": true,
-    "raw": "ionic-gallery-modal",
-    "name": "ionic-gallery-modal",
-    "escapedName": "ionic-gallery-modal",
-    "rawSpec": "",
+    "raw": "ionic4-gallery-modal@0.0.2",
+    "name": "ionic4-gallery-modal",
+    "escapedName": "ionic4-gallery-modal",
+    "rawSpec": "0.0.2",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "0.0.2"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/ionic-gallery-modal/-/ionic-gallery-modal-0.2.7.tgz",
-  "_shasum": "96e1648d05f225b52b137b09f47f64d4b5f617d6",
-  "_spec": "ionic-gallery-modal",
+  "_resolved": "https://registry.npmjs.org/ionic4-gallery-modal/-/ionic4-gallery-modal-0.0.2.tgz",
+  "_shasum": "5f86d3618152d44c332ba2cc16a6e2facbc38780",
+  "_spec": "ionic4-gallery-modal@0.0.2",
   "_where": "/Users/lieon/Desktop/wcb/WCBClient",
-  "author": {
-    "name": "Ciprian Mocanu",
-    "email": "ciprian@mbe.ro"
-  },
   "bugs": {
-    "url": "https://github.com/nikini/ionic-gallery-modal/issues"
+    "url": "https://github.com/cicixiaoyan/ionic4-gallery-modal/issues"
   },
   "bundleDependencies": false,
   "deprecated": false,
-  "description": "[![npm](https://img.shields.io/npm/l/express.svg)](https://www.npmjs.com/package/ionic-gallery-modal) [![NPM Version](http://img.shields.io/npm/v/ionic-gallery-modal.svg?style=flat)](https://www.npmjs.org/package/ionic-gallery-modal) [![NPM Downloads](https://img.shields.io/npm/dm/ionic-gallery-modal.svg?style=flat)](https://www.npmjs.org/package/ionic-gallery-modal)",
-  "homepage": "https://github.com/nikini/ionic-gallery-modal#readme",
+  "description": "修改ionic-gallery-modal支持ionic4",
+  "homepage": "https://github.com/cicixiaoyan/ionic4-gallery-modal#readme",
   "keywords": [
-    "ionic 2",
-    "ionic 3",
+    "ionic 4",
     "gallery",
     "gallery modal"
   ],
-  "license": "MIT",
   "module": "ionic-gallery-modal.js",
-  "name": "ionic-gallery-modal",
+  "name": "ionic4-gallery-modal",
   "peerDependencies": {
-    "@angular/core": "^4.1.3",
-    "ionic-angular": "3.6.0",
-    "rxjs": "^5.4.2",
-    "zone.js": "^0.8.14"
+    "@angular/core": "^7.2.1",
+    "@ionic/angular": "4.0.2",
+    "rxjs": "6.4.0",
+    "zone.js": "^0.8.26",
+    "hammerjs": "2.0.8"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nikini/ionic-gallery-modal.git"
+    "url": "git+https://github.com/cicixiaoyan/ionic4-gallery-modal.git"
   },
-  "typings": "ionic-gallery-modal.d.ts",
-  "version": "0.2.7"
+  "version": "0.0.3"
 }

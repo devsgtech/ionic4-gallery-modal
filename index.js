@@ -1,9 +1,9 @@
 import { Component, Directive, ElementRef, EventEmitter, Input, NgModule, Output, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Gesture, IonicPageModule, NavParams, Platform, ViewController } from 'ionic-angular';
+import { CommonModule  } from '@angular/common';
+import { Gesture, IonicModule, NavParams, Platform, IonSlides, ModalController, IonContent } from '@ionic/angular';
 import { DomSanitizer, HammerGestureConfig } from '@angular/platform-browser';
-import { Subject as Subject$1 } from 'rxjs/Subject';
-
+import { Subject as Subject$1 } from 'rxjs';
+import 'hammerjs';
 var FittedImage = (function () {
     function FittedImage() {
         this.onImageResized = new EventEmitter();
@@ -82,11 +82,12 @@ var FittedImage = (function () {
         });
     };
     FittedImage.decorators = [
-        { type: Component, args: [{
-                    selector: 'fitted-image',
-                    template: "<div class=\"fitted-image\"> <ion-spinner [hidden]=\"!loading\"></ion-spinner> <img [src]=\"photo.url\" [ngStyle]=\"imageStyle\" (load)=\"imageLoad($event)\" [hidden]=\"loading\" alt=\"\" /> </div> ",
-                    styles: [":host { display: inline-block; } :host .fitted-image { display: inline-block; position: relative; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host .fitted-image ion-spinner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } :host .fitted-image img { display: inline-block; min-width: 0; max-width: none; transform-origin: left top; vertical-align: top; pointer-events: none; } "],
-                },] },
+        { type: Component, 
+          args: [{
+            selector: 'fitted-image',
+            template: "<div class=\"fitted-image\"><img [src]=\"photo\" [ngStyle]=\"imageStyle\" (load)=\"imageLoad($event)\" [hidden]=\"loading\" alt=\"\" /> </div> ",
+            styles: [":host { display: inline-block; } :host .fitted-image { display: inline-block; position: relative; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host .fitted-image ion-spinner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } :host .fitted-image img { display: inline-block; min-width: 0; max-width: none; transform-origin: left top; vertical-align: top; pointer-events: none; } "],
+        },] },
     ];
     /**
      * @nocollapse
@@ -147,7 +148,8 @@ var ZoomableImage = (function () {
     ZoomableImage.prototype.ngOnInit = function () {
         var _this = this;
         // Get the scrollable element
-        this.scrollableElement = this.ionScrollContainer.nativeElement.querySelector('.scroll-content');
+        // this.scrollableElement = this.ionScrollContainer.nativeElement.querySelector('.scroll-content');
+        this.scrollableElement = this.ionScrollContainer.getScrollElement();
         // Attach events
         this.attachEvents();
         // Listen to parent resize
@@ -159,8 +161,8 @@ var ZoomableImage = (function () {
      * @return {?}
      */
     ZoomableImage.prototype.ngOnDestroy = function () {
-        this.scrollableElement.removeEventListener('scroll', this.scrollListener);
-        this.resizeSubscription.unsubscribe();
+        // this.scrollableElement.removeEventListener('scroll', this.scrollListener);
+        // this.resizeSubscription.unsubscribe();
     };
     /**
      * Attach the events to the items
@@ -168,8 +170,8 @@ var ZoomableImage = (function () {
      */
     ZoomableImage.prototype.attachEvents = function () {
         // Scroll event
-        this.scrollListener = this.scrollEvent.bind(this);
-        this.scrollableElement.addEventListener('scroll', this.scrollListener);
+        // this.scrollListener = this.scrollEvent.bind(this);
+        // this.scrollableElement.addEventListener('scroll', this.scrollListener);
     };
     /**
      * Called every time the window gets resized
@@ -373,8 +375,45 @@ var ZoomableImage = (function () {
     ZoomableImage.decorators = [
         { type: Component, args: [{
                     selector: 'zoomable-image',
-                    template: "<ion-scroll #ionScrollContainer scrollX=\"true\" scrollY=\"true\" zoom=\"false\"> <div class=\"image\" touch-events direction=\"y\" (pinch)=\"pinchEvent($event)\" (pinchstart)=\"pinchStartEvent($event)\" (pinchend)=\"pinchEndEvent($event)\" (doubletap)=\"doubleTapEvent($event)\" (onpan)=\"panEvent($event)\" [ngStyle]=\"containerStyle\" > <fitted-image [photo]=\"photo\" [ngStyle]=\"imageStyle\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"wrapperWidth\" [wrapperHeight]=\"wrapperHeight\" (onImageResized)=\"handleImageResized($event)\" ></fitted-image> </div> </ion-scroll> <div class=\"fitted-image-title\" *ngIf=\"photo.title\" >{{ photo.title }}</div> ",
-                    styles: [":host { display: block; position: relative; width: 100%; height: 100%; } :host ion-scroll { width: 100%; height: 100%; text-align: left; white-space: nowrap; } :host ion-scroll /deep/ .scroll-zoom-wrapper { width: 100%; height: 100%; } :host ion-scroll .image { display: inline-block; position: relative; min-width: 100%; min-height: 100%; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host ion-scroll .image fitted-image { transform-origin: left top; pointer-events: none; } :host .fitted-image-title { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background-color: rgba(0, 0, 0, 0.3); color: white; font-size: 14px; line-height: 18px; text-align: center; z-index: 1; } "],
+                    template: `
+                    <ion-content #ionScrollContainer scrollion-content scrollX scrollY>
+                      <div class="image" touch-events direction="y" 
+                        (pinch)="pinchEvent($event)" 
+                        (pinchstart)="pinchStartEvent($event)" 
+                        (pinchend)="pinchEndEvent($event)" 
+                        (doubletap)="doubleTapEvent($event)" 
+                        (onpan)="panEvent($event)" 
+                        [ngStyle]="containerStyle" > 
+                        <fitted-image [photo]="photo" [ngStyle]="imageStyle" 
+                            [resizeTriggerer]="resizeTriggerer" 
+                            [wrapperWidth]="wrapperWidth" 
+                            [wrapperHeight]="wrapperHeight" 
+                            (onImageResized)="handleImageResized($event)" >
+                        </fitted-image>
+                      </div>
+                    </ion-content>
+                    <ion-footer class="fitted-image-title" *ngIf="photo.title" >{{ photo.title }}</ion-footer>
+                    `,
+                    styles: [`
+                    :host { display: block; position: relative; width: 100%; height: 100%; } 
+                    :host ion-scroll { 
+                      width: 100%; height: 100%; text-align: left; white-space: nowrap; } 
+                    :host ion-scroll /deep/ .scroll-zoom-wrapper { width: 100%; height: 100%; } 
+                    :host ion-scroll .image { 
+                      display: inline-block; 
+                      position: relative; min-width: 100%; 
+                      min-height: 100%; transform-origin: left top; 
+                      background-repeat: no-repeat; background-position: center center; 
+                      background-size: contain; text-align: left; vertical-align: top; } 
+                    :host ion-scroll .image fitted-image { 
+                      transform-origin: left top; pointer-events: none; } 
+                    :host .fitted-image-title { 
+                      position: absolute; 
+                      bottom: 0; left: 0; 
+                      width: 100%; padding: 15px; 
+                      background-color: rgba(0, 0, 0, 0.3); 
+                      color: white; font-size: 14px; line-height: 18px; 
+                      text-align: center; z-index: 1; } `],
                 },] },
     ];
     /**
@@ -382,7 +421,8 @@ var ZoomableImage = (function () {
      */
     ZoomableImage.ctorParameters = function () { return []; };
     ZoomableImage.propDecorators = {
-        'ionScrollContainer': [{ type: ViewChild, args: ['ionScrollContainer', { read: ElementRef },] },],
+        // 'ionScrollContainer': [{ type: ViewChild, args: ['ionScrollContainer', { read: ElementRef },] },],
+        'ionScrollContainer': [{ type: ViewChild, args: [IonContent] }],
         'photo': [{ type: Input },],
         'resizeTriggerer': [{ type: Input },],
         'wrapperWidth': [{ type: Input },],
@@ -417,8 +457,8 @@ var GalleryModal = (function () {
         this.panUpDownRatio = 0;
         this.panUpDownDeltaY = 0;
         this.dismissed = false;
-        this.width = 0;
-        this.height = 0;
+        this.width = document.body.clientWidth;
+        this.height = document.body.clientHeight;
         this.slidesStyle = {
             visibility: 'hidden',
         };
@@ -429,16 +469,19 @@ var GalleryModal = (function () {
         this.transitionTimingFunction = 'cubic-bezier(0.33, 0.66, 0.66, 1)';
         this.photos = params.get('photos') || [];
         this.closeIcon = params.get('closeIcon') || 'arrow-back';
-        this.initialSlide = params.get('initialSlide') || 0;
+        this.slideOption = {
+            initialSlide: params.get('initialSlide') || 0
+        };
+        // this.initialSlide = params.get('initialSlide') || 0;
         this.initialImage = this.photos[this.initialSlide] || {};
     }
     /**
      * @return {?}
      */
-    GalleryModal.prototype.ngOnInit = function () {
-        // call resize on init
-        this.resize({});
-    };
+    // GalleryModal.prototype.ngOnInit = function () {
+    //     // call resize on init
+    //     this.resize({});
+    // };
     /**
      * Closes the modal (when user click on CLOSE)
      * @return {?}
@@ -576,15 +619,52 @@ var GalleryModal = (function () {
     GalleryModal.decorators = [
         { type: Component, args: [{
                     selector: 'gallery-modal',
-                    template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
-                    styles: [":host .gallery-modal { position: relative; overflow: hidden; } :host .gallery-modal .close-button { position: absolute; top: 10px; left: 5px; background: none; box-shadow: none; z-index: 10; } :host .gallery-modal .close-button.button-ios { top: 20px; } :host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; } :host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } :host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "],
+                    template: `
+                    <ion-content class="gallery-modal" no-bounce [ngStyle]="modalStyle" 
+                    (window:resize)="resize($event)" (window:orientationchange)="orientationChange($event)" > 
+                      <ion-button class="close-button" fill="clear" icon-only tappable (click)="dismiss()"> 
+                        <ion-icon name="{{ closeIcon }}"></ion-icon> 
+                      </ion-button> <!-- Initial image while modal is animating --> 
+                      <div class="image-on-top" [hidden]="sliderLoaded"> 
+                        <zoomable-image [photo]="initialImage" [resizeTriggerer]="resizeTriggerer" [wrapperWidth]="width" [wrapperHeight]="height" >
+                        </zoomable-image> 
+                      </div> <!-- Slider with images --> 
+                      <ion-slides class="slider" #slider *ngIf="photos.length" [options]="slideOption" 
+                      [ngStyle]="slidesStyle" touch-events (ionSlideDrag)="slidesDrag($event)" 
+                      (panup)="panUpDownEvent($event)"
+                      (pandown)="panUpDownEvent($event)" 
+                      (panend)="panEndEvent($event)"
+                      (pancancel)="panEndEvent($event)" > 
+                        <ion-slide *ngFor="let photo of photos;"> 
+                          <zoomable-image [photo]="photo" [resizeTriggerer]="resizeTriggerer" 
+                          [wrapperWidth]="width" [wrapperHeight]="height" 
+                          [ngClass]="{ 'swiper-no-swiping': sliderDisabled }" 
+                          (disableScroll)="disableScroll($event)" (enableScroll)="enableScroll($event)" >
+                          </zoomable-image> 
+                        </ion-slide> 
+                      </ion-slides> 
+                    </ion-content>
+                    `,
+                    styles: [`
+                    :host .gallery-modal { position: relative; overflow: hidden; } 
+                    :host .gallery-modal .close-button { 
+                      position: absolute; top: 10px; left: 5px; background: none; 
+                      box-shadow: none; z-index: 10; } 
+                    :host ion-slide { height: 100%; }
+                    :host .gallery-modal .close-button.button-ios { top: 20px; } 
+                    :host .gallery-modal .slider{ position: relative; height: 100%; } 
+                    :host .gallery-modal .image-on-top { 
+                      display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } 
+                      :host .gallery-modal .image-on-top fitted-image { 
+                        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } 
+                    `],
                 },] },
     ];
     /**
      * @nocollapse
      */
     GalleryModal.ctorParameters = function () { return [
-        { type: ViewController, },
+        { type: ModalController, },
         { type: NavParams, },
         { type: ElementRef, },
         { type: Platform, },
@@ -592,6 +672,7 @@ var GalleryModal = (function () {
     ]; };
     GalleryModal.propDecorators = {
         'slider': [{ type: ViewChild, args: ['slider',] },],
+        // 'slider': [{ type: ViewChild, args: [IonSlides] },],
     };
     return GalleryModal;
 }());
@@ -621,13 +702,13 @@ var TouchEventsDirective = (function () {
      */
     TouchEventsDirective.prototype.ngOnInit = function () {
         var _this = this;
-        this.gestureListener = new Gesture(this.el.nativeElement, {
+        this.gestureListener = new Hammer(this.el.nativeElement, {
             domEvents: false,
             enable: true,
             direction: this.direction,
             threshold: this.threshold,
         });
-        this.gestureListener.listen();
+        // this.gestureListener.listen();
         this.gestureListener.on('pinch', function (event) {
             _this.pinch.emit(event);
         });
@@ -731,10 +812,11 @@ var GalleryModalModule = (function () {
         { type: NgModule, args: [{
                     imports: [
                         CommonModule,
-                        IonicPageModule.forChild(TouchEventsDirective),
-                        IonicPageModule.forChild(FittedImage),
-                        IonicPageModule.forChild(ZoomableImage),
-                        IonicPageModule.forChild(GalleryModal),
+                        IonicModule
+                        // IonicPageModule.forChild(TouchEventsDirective),
+                        // IonicPageModule.forChild(FittedImage),
+                        // IonicPageModule.forChild(ZoomableImage),
+                        // IonicPageModule.forChild(GalleryModal),
                     ],
                     declarations: [
                         FittedImage,
@@ -749,7 +831,10 @@ var GalleryModalModule = (function () {
                         TouchEventsDirective,
                     ],
                     entryComponents: [
+                        FittedImage,
                         GalleryModal,
+                        ZoomableImage,
+
                     ],
                 },] },
     ];
