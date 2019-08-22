@@ -467,10 +467,10 @@ var GalleryModal = (function () {
         };
         this.transitionDuration = '200ms';
         this.transitionTimingFunction = 'cubic-bezier(0.33, 0.66, 0.66, 1)';
-        this.photos = params.get('photos') || [];
-        this.closeIcon = params.get('closeIcon') || 'arrow-back';
+        this.photos = params.data.photos || [];
+        this.closeIcon = params.data.closeIcon || 'arrow-back';
         this.slideOption = {
-            initialSlide: params.get('initialSlide') || 0
+            initialSlide: params.data.initialSlide || 0
         };
         // this.initialSlide = params.get('initialSlide') || 0;
         this.initialImage = this.photos[this.initialSlide] || {};
