@@ -7,7 +7,6 @@
 # Ionic Gallery Modal
 
 It consists of a modal that will help you make gallery preview modal.
-Last tested with Ionic 3.13.0
 
 ## Demo
 
@@ -58,19 +57,22 @@ providers: [
 
 ## Usage
 
-To open the module just use the [Ionic ModalController](https://ionicframework.com/docs/v2/api/components/modal/ModalController/)
+To open the module just use the [Ionic ModalController](https://ionicframework.com/docs/api/modal)
 
 ```
-import { ModalController } from 'ionic-angular';
+import { ModalController } from '@ionic/angular';
 import { GalleryModal } from 'ionic-gallery-modal';
 ```
 
 ```
-let modal = this.modalCtrl.create(GalleryModal, {
-  photos: photos,
-  initialSlide: index
+const modal = await this.modalCtrl.create({
+  component: GalleryModal,
+  componentProps: {
+    photos: photoArrayForModal,
+    initialSlide: index
+  }
 });
-modal.present();
+await modal.present();
 ```
 
 ## Options
